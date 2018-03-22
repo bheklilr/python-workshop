@@ -9,3 +9,6 @@ class Calculator:
 
     def parse(self, expression: str) -> Expression:
         pass
+
+    def calculate(self, expression: str) -> float:
+        pass
