@@ -11,4 +11,4 @@ class Calculator:
         pass
 
     def calculate(self, expression: str) -> float:
-        pass
+        return eval(expression)
