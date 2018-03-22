@@ -10,5 +10,9 @@ class Calculator:
     def parse(self, expression: str) -> Expression:
         pass
 
+    def evaluate(self, expr: Expression) -> float:
+        pass
+
     def calculate(self, expression: str) -> float:
-        return eval(expression)
+        expr = self.parse(expression)
+        return self.evaluate(expr)
