@@ -20,9 +20,19 @@ class Calculator:
             return expr.n
 
         if isinstance(expr, ast.BinOp):
+            left = self.evaluate(expr.left)
+            right = self.evaluate(expr.right)
+
             if type(expr.op) is ast.Add:
-                left = self.evaluate(expr.left)
-                right = self.evaluate(expr.right)
                 return left + right
+
+            if type(expr.op) is ast.Sub:
+                return left - right
+
+            if type(expr.op) is ast.Mult:
+                return left * right
+
+            if type(expr.op) is ast.Div:
+                return left / right
 
         raise TypeError('Unsupported expression')
