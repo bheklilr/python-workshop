@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 from setuptools import Command
+from pkg_resources import EntryPoint, Distribution
 
 version = '1.0.0'
 
@@ -48,6 +49,40 @@ class CheckCommand(Command):
             pytest.cmdline.main([])
 
 
+class RunCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        # Get the entry points, with gui_scripts taking precedence
+        scripts = self.distribution.entry_points.get(
+            'gui_scripts',
+            self.distribution.entry_points.get('console_scripts', []),
+        )
+        if len(scripts) == 0:
+            self.warn('No scripts defined in gui_scripts or console_scripts.')
+            return
+
+        script = scripts[0]
+
+        if len(scripts) > 1:
+            self.warn('More than one script specified, running the first one: {}'.format(script))
+
+        # This is a bit advanced, but use the pkg_resources module to load the
+        # entry point.  In order to actually load it, we have to provide a
+        # Distribution object, and an empty Distribution will work.
+        ep = EntryPoint.parse(script, dist=Distribution())
+        # Load the entry point (this is the actual function to run)
+        function_to_run = ep.load()
+        # And run it
+        function_to_run()
+
+
 setup(
     name="pycalc",
     version=version,
@@ -67,5 +102,6 @@ setup(
     ],
     cmdclass={
         'check': CheckCommand,
+        'run': RunCommand,
     }
 )
