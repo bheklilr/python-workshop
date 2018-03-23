@@ -7,7 +7,7 @@ class Calculator:
 
     def parse(self, expression: str) -> ast.Expr:
         module: ast.Module = ast.parse(expression)
-        body: ast.Expr = module.body[0].value
+        body: ast.Expr = module.body[0].value  # type: ignore
         return body
 
     def calculate(self, expression: str) -> float:
