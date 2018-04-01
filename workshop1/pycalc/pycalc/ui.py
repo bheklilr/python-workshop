@@ -13,17 +13,23 @@ class PyCalcUI(tk.Frame):
 
         self.calculator = calculator
 
+        # This draws the PyCalcUI in the main window
         self.pack()
+        # Create the UI itself
         self.create_widgets()
 
     @classmethod
     def run_app(cls, calculator: Calculator, parent: tk.Tk=None) -> None:
+        """Creates and runs an Application object using the given Calculator.
+        """
         if parent is None:
             parent = tk.Tk()
         app = cls(calculator=calculator, parent=parent)
         app.mainloop()
 
     def create_widgets(self) -> None:
+        """Creates all of the widgets for the PyCalcUI
+        """
         self.entry_var = tk.StringVar(self, value='0')
         self.entry = tk.Entry(self, textvariable=self.entry_var)
         self.entry['justify'] = tk.RIGHT
@@ -45,7 +51,8 @@ class PyCalcUI(tk.Frame):
                     command=self.on_number_clicked(number),
                 )
                 self.btns[number].grid(row=row, column=j, **opts)
-        self.btns[0] = tk.Button(self, text='0')
+        self.btns[0] = tk.Button(self, text='0',
+                                 command=self.on_number_clicked(0))
         self.btns[0].grid(row=4, column=0, columnspan=2, **opts)
 
         self.op_btns: Dict[str, tk.Button] = {}
@@ -60,15 +67,24 @@ class PyCalcUI(tk.Frame):
             self.op_btns[op].grid(row=i, column=3, **opts)
 
     def on_number_clicked(self, number: int) -> EventHandler:
+        """Creates an EventHandler for the given number. Tkinter requires this
+        because you can't find out what button was pressed from the event.
+        """
+        # Define a new EventHandler that handles the button click
         def on_clicked() -> None:
             current = self.entry_var.get()
             if current == '0':
                 current = ''
             self.entry_var.set(current + str(number))
 
+        # Return the EventHandler
         return on_clicked
 
     def on_op_clicked(self, op: str) -> EventHandler:
+        """Creates an EventHandler for the given operation. Tkinter requires
+        this because you can't find out what button was pressed from the event.
+        """
+        # Define a new EventHandler that handles the button click
         def on_clicked() -> None:
             current = self.entry_var.get()
             if current == '':
@@ -81,9 +97,12 @@ class PyCalcUI(tk.Frame):
             if current[-1].isdigit():
                 self.entry_var.set(current + op)
 
+        # Return the EventHandler
         return on_clicked
 
     def on_eq_clicked(self) -> None:
+        """Computes the inputed expression and displays the result back.
+        """
         expression = self.entry_var.get()
         try:
             result = self.calculator.calculate(expression)
