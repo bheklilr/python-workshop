@@ -3,6 +3,10 @@ import tkinter as tk
 from .calculator import Calculator  # noqa
 
 
+# An EventHandler is a callable that takes no arguments are returns None
+EventHandler = Callable[[], None]
+
+
 class PyCalcUI(tk.Frame):
     def __init__(self, calculator: Calculator, parent: tk.Tk=None) -> None:
         super().__init__(parent)
@@ -47,7 +51,7 @@ class PyCalcUI(tk.Frame):
         self.op_btns: Dict[str, tk.Button] = {}
 
         self.op_btns['='] = tk.Button(self, text='=',
-                                      command=self.on_op_clicked('='))
+                                      command=self.on_eq_clicked)
         self.op_btns['='].grid(row=4, column=2, **opts)
 
         for i, op in enumerate(Calculator.SUPPORTED_OPERATORS, 1):
@@ -55,15 +59,31 @@ class PyCalcUI(tk.Frame):
                                          command=self.on_op_clicked(op))
             self.op_btns[op].grid(row=i, column=3, **opts)
 
-    def on_number_clicked(self, number: int) -> Callable[[], None]:
+    def on_number_clicked(self, number: int) -> EventHandler:
         def on_clicked() -> None:
             current = self.entry_var.get()
             if current == '0':
                 current = ''
             self.entry_var.set(current + str(number))
+
         return on_clicked
 
-    def on_op_clicked(self, op: str) -> Callable[[], None]:
+    def on_op_clicked(self, op: str) -> EventHandler:
         def on_clicked() -> None:
-            pass
+            current = self.entry_var.get()
+            if current == '':
+                return
+            if current.endswith(op):
+                return
+            if not current[-1].isdigit():
+                return
+
+            if current[-1].isdigit():
+                self.entry_var.set(current + op)
+
         return on_clicked
+
+    def on_eq_clicked(self) -> None:
+        expression = self.entry_var.get()
+        result = self.calculator.calculate(expression)
+        self.entry_var.set(result)
