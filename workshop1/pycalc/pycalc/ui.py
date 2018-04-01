@@ -85,5 +85,9 @@ class PyCalcUI(tk.Frame):
 
     def on_eq_clicked(self) -> None:
         expression = self.entry_var.get()
-        result = self.calculator.calculate(expression)
-        self.entry_var.set(result)
+        try:
+            result = self.calculator.calculate(expression)
+        except SyntaxError:
+            print(f'Expression is not valid: "{expression}"')
+        else:
+            self.entry_var.set(result)
