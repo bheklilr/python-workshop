@@ -2,6 +2,8 @@ import ast
 
 
 class Calculator:
+    SUPPORTED_OPERATORS = ('+', '-', '*', '/')
+
     def __init__(self) -> None:
         pass
 

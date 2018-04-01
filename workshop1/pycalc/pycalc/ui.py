@@ -36,5 +36,12 @@ class PyCalcUI(tk.Frame):
                 self.btns[number].grid(row=i + 1, column=j, **opts)
         self.btns[0] = tk.Button(self, text='0')
         self.btns[0].grid(row=4, column=0, columnspan=2, **opts)
-        self.compute_btn = tk.Button(self, text='=')
-        self.compute_btn.grid(row=4, column=2, **opts)
+
+        self.op_btns = {}
+
+        self.op_btns['='] = tk.Button(self, text='=')
+        self.op_btns['='].grid(row=4, column=2, **opts)
+
+        for i, op in enumerate(Calculator.SUPPORTED_OPERATORS, 1:
+            self.op_btns[op] = tk.Button(self, text=op)
+            self.op_btns[op].grid(row=i, column=3, **opts)
