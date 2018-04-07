@@ -71,7 +71,7 @@ requirements:
 This will make it possible to run
 
 ```shell
-> python setup.py check
+> python setup.py code_quality
 ```
 
 Which will run `flake8`, `mypy`, and `pytest`. These tools help ensure that the

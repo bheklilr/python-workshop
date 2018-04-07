@@ -6,7 +6,7 @@ import subprocess as sp
 version = '1.0.0'
 
 
-class CheckCommand(Command):
+class CodeQualityCommand(Command):
     """This is a custom setup.py command that runs multiple code quality tools.
     This class is passed to the `setup` method and is used to extend the default
     commands for setup.py.  To find out what all commands are available, try
@@ -29,6 +29,8 @@ class CheckCommand(Command):
       * pytest - A powerful unit testing framework. Testing code is important to
                  ensure correctness and robustness of code.
     """
+
+    description = 'Runs various code quality checks'
 
     #: This class-level variable is where you would place any additional
     #: arguments if you needed them.
@@ -103,6 +105,8 @@ class RunCommand(Command):
     `python -m pycalc`
     """
 
+    description = 'Runs the first gui_script or console_script'
+
     user_options = []
 
     def initialize_options(self):
@@ -143,12 +147,20 @@ class RunCommand(Command):
         function_to_run()
 
 
+# The `setuptools.setup` function is the standard way to manage Python projects.
+# Virtually every python project out there uses setuptools or it's older cousin
+# distutils.
+# This function takes a lot of metadata about your project, like the name,
+# author, version, etc. and builds a command line interface for managing it.
+#
+# Try running `python setup.py --help-commands` to see all of the commands.
 setup(
     name="pycalc",
     version=version,
     author="Aaron Stevens",
     author_email="bheklilr2@gmail.com",
     description="A simple calculator app",
+    url="https://github.com/bheklilr/python-workshop/tree/master/workshop1/pycalc",
     packages=find_packages('.', exclude=['docs', 'tests']),
     entry_points={
         'gui_scripts': [
@@ -161,7 +173,7 @@ setup(
         'pytest',
     ],
     cmdclass={
-        'check': CheckCommand,
+        'code_quality': CodeQualityCommand,
         'run': RunCommand,
     }
 )
