@@ -173,6 +173,7 @@ setup(
             'PyCalc=pycalc.__main__:main'
         ]
     },
+    install_requires=[],
     setup_requires=[
         'mypy',
         'flake8',
