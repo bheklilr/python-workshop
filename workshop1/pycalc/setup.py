@@ -98,6 +98,11 @@ class CheckCommand(Command):
 
 
 class RunCommand(Command):
+    """This is a custom setup.py command that runs the pycalc main method to
+    launch the program.  It is just a convenience method around running
+    `python -m pycalc`
+    """
+
     user_options = []
 
     def initialize_options(self):
@@ -107,11 +112,18 @@ class RunCommand(Command):
         pass
 
     def run(self):
+        """This method could be simpler by using the subprocess module, but the
+        "correct" way to do things is to use the pkg_resources module to load
+        the main method dynamically using the specification given by the
+        `entry_points`.  This means that if the `entry_points` is changed, then
+        this method will still work.
+        """
+
         # Get the entry points, with gui_scripts taking precedence
-        scripts = self.distribution.entry_points.get(
-            'gui_scripts',
-            self.distribution.entry_points.get('console_scripts', []),
-        )
+        gui_scripts = self.distribution.entry_points.get('gui_scripts', [])
+        console_scripts = self.distribution.entry_points.get('console_scripts', [])
+        scripts = gui_scripts + console_scripts
+
         if len(scripts) == 0:
             self.warn('No scripts defined in gui_scripts or console_scripts.')
             return
