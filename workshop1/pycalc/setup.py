@@ -45,12 +45,21 @@ class CheckCommand(Command):
         """
 
     def run_flake8(self):
+        """Runs the flake8 command on the pycalc module."""
         try:
+            # This is imported inside this method since flake8 is only a
+            # development dependency.  It may not be installed, so waiting to
+            # import it until this method is run means that we can handle what
+            # to do if it isn't installed.
+            # The noqa commend here prevents flake8 from flagging this line as a
+            # style problem.
             import flake8  # noqa
         except ImportError:
             self.warn('flake8 is not installed, skipping code style checks.')
         else:
             self.announce('Checking code style...', level=2)
+            # The subprocess module provides tools for executing other programs
+            # via the command line.  This is a very simple way to do this.
             output = sp.getoutput('flake8 pycalc')
             if len(output) > 0:
                 self.announce('Code style problems found:', level=3)
@@ -58,6 +67,7 @@ class CheckCommand(Command):
                     self.announce('\t' + line, level=3)
 
     def run_mypy(self):
+        """Runs the mypy command on the pycalc module."""
         try:
             import mypy  # noqa
         except ImportError:
@@ -71,11 +81,14 @@ class CheckCommand(Command):
                     self.announce('\t' + line, level=3)
 
     def run_pytest(self):
+        """Runs the pytest command on the pycalc's test module."""
         try:
             import pytest
         except ImportError:
             self.warn('pytest is not installed, skipping tests.')
         else:
+            # pytest is nice in that it makes it easy to run its main method
+            # without having to resort to using subprocess
             pytest.cmdline.main([])
 
     def run(self):
