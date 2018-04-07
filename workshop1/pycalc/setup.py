@@ -162,6 +162,12 @@ setup(
     description="A simple calculator app",
     url="https://github.com/bheklilr/python-workshop/tree/master/workshop1/pycalc",
     packages=find_packages('.', exclude=['docs', 'tests']),
+    license='UNLICENSE',
+    keywords='example tkinter calculator',
+    project_urls={
+        'Bug Tracker': 'https://github.com/bheklilr/python-workshop/issues',
+        'Source Code': 'https://github.com/bheklilr/python-workshop/tree/master/workshop1/pycalc',
+    },
     entry_points={
         'gui_scripts': [
             'PyCalc=pycalc.__main__:main'
